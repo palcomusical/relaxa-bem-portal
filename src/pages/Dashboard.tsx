@@ -9,6 +9,7 @@ import AppointmentsTab from '@/components/dashboard/AppointmentsTab';
 import ContactsTab from '@/components/dashboard/ContactsTab';
 import ClientsTab from '@/components/dashboard/ClientsTab';
 import ReportsTab from '@/components/dashboard/ReportsTab';
+import CalendarTab from '@/components/dashboard/CalendarTab';
 import SettingsModal from '@/components/dashboard/SettingsModal';
 import ReportsModal from '@/components/ReportsModal';
 
@@ -77,8 +78,9 @@ const Dashboard = () => {
 
         {/* Main Content */}
         <Tabs defaultValue="appointments" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="appointments">Agendamentos ({serviceBookings.length})</TabsTrigger>
+            <TabsTrigger value="calendar">Calendário</TabsTrigger>
             <TabsTrigger value="contacts">Contatos ({contactForms.length + whatsappLeads.length})</TabsTrigger>
             <TabsTrigger value="clients">Clientes ({clients.length})</TabsTrigger>
             <TabsTrigger value="reports">Relatórios</TabsTrigger>
@@ -92,6 +94,13 @@ const Dashboard = () => {
               serviceBookings={serviceBookings}
               addServiceBooking={addServiceBooking}
               updateServiceBooking={updateServiceBooking}
+            />
+          </TabsContent>
+
+          <TabsContent value="calendar">
+            <CalendarTab
+              serviceBookings={serviceBookings}
+              addServiceBooking={addServiceBooking}
             />
           </TabsContent>
 
