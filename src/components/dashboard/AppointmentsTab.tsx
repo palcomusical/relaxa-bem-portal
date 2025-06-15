@@ -7,8 +7,14 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Filter, Plus, Eye, Edit } from 'lucide-react';
+import { Calendar } from '@/components/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Filter, Plus, Eye, Edit, Calendar as CalendarIcon } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { format, startOfWeek, endOfWeek, startOfMonth, endOfMonth } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
+import { cn } from '@/lib/utils';
+import EditAppointmentModal from './EditAppointmentModal';
 
 interface AppointmentsTabProps {
   selectedDate: string;
@@ -28,6 +34,9 @@ const AppointmentsTab = ({
   updateServiceBooking 
 }: AppointmentsTabProps) => {
   const [activeModal, setActiveModal] = useState<string | null>(null);
+  const [editingBooking, setEditingBooking] = useState<any>(null);
+  const [calendarDate, setCalendarDate] = useState<Date>(new Date());
+  const [viewMode, setViewMode] = useState<'day' | 'week' | 'month'>('day');
   const [newAppointmentForm, setNewAppointmentForm] = useState({
     name: '', phone: '', email: '', service: '', preferredDate: '', preferredTime: '', message: ''
   });
@@ -48,6 +57,40 @@ const AppointmentsTab = ({
     '16:00', '16:30', '17:00', '17:30'
   ];
 
+  const getFilteredBookingsByMode = () => {
+    const date = new Date(calendarDate);
+    
+    switch (viewMode) {
+      case 'day':
+        return serviceBookings.filter(booking => 
+          booking.preferredDate === format(date, 'yyyy-MM-dd')
+        );
+      case 'week':
+        const weekStart = startOfWeek(date, { locale: ptBR });
+        const weekEnd = endOfWeek(date, { locale: ptBR });
+        return serviceBookings.filter(booking => {
+          const bookingDate = new Date(booking.preferredDate);
+          return bookingDate >= weekStart && bookingDate <= weekEnd;
+        });
+      case 'month':
+        const monthStart = startOfMonth(date);
+        const monthEnd = endOfMonth(date);
+        return serviceBookings.filter(booking => {
+          const bookingDate = new Date(booking.preferredDate);
+          return bookingDate >= monthStart && bookingDate <= monthEnd;
+        });
+      default:
+        return filteredBookings;
+    }
+  };
+
+  const handleDateSelect = (date: Date | undefined) => {
+    if (date) {
+      setCalendarDate(date);
+      setSelectedDate(format(date, 'yyyy-MM-dd'));
+    }
+  };
+
   const handleNewAppointment = (e: React.FormEvent) => {
     e.preventDefault();
     addServiceBooking(newAppointmentForm);
@@ -61,21 +104,83 @@ const AppointmentsTab = ({
     toast({ title: "Status atualizado!", description: `Agendamento marcado como ${status}.` });
   };
 
+  const handleEditBooking = (booking: any) => {
+    setEditingBooking(booking);
+    setActiveModal('edit-appointment');
+  };
+
+  const handleSaveEdit = (updatedBooking: any) => {
+    updateServiceBooking(editingBooking.id, updatedBooking);
+    toast({ title: "Agendamento atualizado!", description: "Agendamento editado com sucesso." });
+    setEditingBooking(null);
+    setActiveModal(null);
+  };
+
+  const currentFilteredBookings = getFilteredBookingsByMode();
+
+  const getViewModeText = () => {
+    switch (viewMode) {
+      case 'day':
+        return `Dia ${format(calendarDate, 'dd/MM/yyyy')}`;
+      case 'week':
+        const weekStart = startOfWeek(calendarDate, { locale: ptBR });
+        const weekEnd = endOfWeek(calendarDate, { locale: ptBR });
+        return `Semana de ${format(weekStart, 'dd/MM')} a ${format(weekEnd, 'dd/MM/yyyy')}`;
+      case 'month':
+        return `Mês de ${format(calendarDate, 'MMMM yyyy', { locale: ptBR })}`;
+      default:
+        return '';
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-4">
           <Filter className="w-5 h-5 text-gray-500" />
-          <Input
-            type="date"
-            value={selectedDate}
-            onChange={(e) => setSelectedDate(e.target.value)}
-            className="w-auto"
-          />
+          
+          {/* View Mode Selector */}
+          <Select value={viewMode} onValueChange={(value: 'day' | 'week' | 'month') => setViewMode(value)}>
+            <SelectTrigger className="w-32">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="day">Dia</SelectItem>
+              <SelectItem value="week">Semana</SelectItem>
+              <SelectItem value="month">Mês</SelectItem>
+            </SelectContent>
+          </Select>
+
+          {/* Calendar Picker */}
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                className={cn(
+                  "w-[240px] justify-start text-left font-normal",
+                  !calendarDate && "text-muted-foreground"
+                )}
+              >
+                <CalendarIcon className="mr-2 h-4 w-4" />
+                {getViewModeText()}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+              <Calendar
+                mode="single"
+                selected={calendarDate}
+                onSelect={handleDateSelect}
+                initialFocus
+                className="p-3 pointer-events-auto"
+              />
+            </PopoverContent>
+          </Popover>
+
           <span className="text-sm text-gray-600">
-            {filteredBookings.length} agendamentos encontrados para {new Date(selectedDate).toLocaleDateString('pt-BR')}
+            {currentFilteredBookings.length} agendamentos encontrados
           </span>
         </div>
+
         <Dialog open={activeModal === 'new-appointment'} onOpenChange={(open) => setActiveModal(open ? 'new-appointment' : null)}>
           <DialogTrigger asChild>
             <Button className="bg-wellness-500 hover:bg-wellness-600">
@@ -150,12 +255,12 @@ const AppointmentsTab = ({
 
       <Card>
         <CardHeader>
-          <CardTitle>Agendamentos do Dia {new Date(selectedDate).toLocaleDateString('pt-BR')}</CardTitle>
+          <CardTitle>Agendamentos - {getViewModeText()}</CardTitle>
         </CardHeader>
         <CardContent>
-          {filteredBookings.length === 0 ? (
+          {currentFilteredBookings.length === 0 ? (
             <div className="text-center py-8">
-              <p className="text-gray-500">Nenhum agendamento encontrado para esta data.</p>
+              <p className="text-gray-500">Nenhum agendamento encontrado para este período.</p>
               <p className="text-sm text-gray-400 mt-2">
                 Total de agendamentos no sistema: {serviceBookings.length}
               </p>
@@ -166,13 +271,14 @@ const AppointmentsTab = ({
                 <TableRow>
                   <TableHead>Cliente</TableHead>
                   <TableHead>Serviço</TableHead>
+                  <TableHead>Data</TableHead>
                   <TableHead>Horário</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Ações</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredBookings.map((booking) => (
+                {currentFilteredBookings.map((booking) => (
                   <TableRow key={booking.id}>
                     <TableCell>
                       <div>
@@ -180,7 +286,12 @@ const AppointmentsTab = ({
                         <p className="text-sm text-gray-500">{booking.phone}</p>
                       </div>
                     </TableCell>
-                    <TableCell>{booking.service}</TableCell>
+                    <TableCell className="max-w-xs">
+                      <span className="text-sm">{booking.service}</span>
+                    </TableCell>
+                    <TableCell>
+                      {format(new Date(booking.preferredDate), 'dd/MM/yyyy')}
+                    </TableCell>
                     <TableCell>{booking.preferredTime}</TableCell>
                     <TableCell>
                       <Select
@@ -204,7 +315,11 @@ const AppointmentsTab = ({
                         <Button size="sm" variant="outline">
                           <Eye className="w-4 h-4" />
                         </Button>
-                        <Button size="sm" variant="outline">
+                        <Button 
+                          size="sm" 
+                          variant="outline"
+                          onClick={() => handleEditBooking(booking)}
+                        >
                           <Edit className="w-4 h-4" />
                         </Button>
                       </div>
@@ -216,6 +331,19 @@ const AppointmentsTab = ({
           )}
         </CardContent>
       </Card>
+
+      {/* Edit Appointment Modal */}
+      <EditAppointmentModal
+        isOpen={activeModal === 'edit-appointment'}
+        onClose={() => {
+          setActiveModal(null);
+          setEditingBooking(null);
+        }}
+        booking={editingBooking}
+        onSave={handleSaveEdit}
+        services={services}
+        timeSlots={timeSlots}
+      />
     </div>
   );
 };
