@@ -28,10 +28,13 @@ import {
 } from 'lucide-react';
 import { useData } from '@/contexts/DataContext';
 import { useToast } from '@/hooks/use-toast';
+import ReportsModal from '@/components/ReportsModal';
 
 const Dashboard = () => {
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [activeModal, setActiveModal] = useState<string | null>(null);
+  const [reportType, setReportType] = useState<string>('');
+  const [showReportsModal, setShowReportsModal] = useState(false);
   const [newClientForm, setNewClientForm] = useState({
     name: '', email: '', phone: '', whatsapp: '', address: '', birthDate: '', notes: ''
   });
@@ -39,7 +42,7 @@ const Dashboard = () => {
     name: '', phone: '', email: '', service: '', preferredDate: '', preferredTime: '', message: ''
   });
   
-  const { serviceBookings, contactForms, whatsappLeads, clients, addClient, addServiceBooking, updateServiceBooking } = useData();
+  const { serviceBookings, contactForms, whatsappLeads, clients, addClient, addServiceBooking, updateServiceBooking, generateSimulatedData } = useData();
   const { toast } = useToast();
 
   // Filter bookings by selected date
@@ -99,6 +102,11 @@ const Dashboard = () => {
     toast({ title: "Status atualizado!", description: `Agendamento marcado como ${status}.` });
   };
 
+  const handleReportClick = (type: string) => {
+    setReportType(type);
+    setShowReportsModal(true);
+  };
+
   const services = [
     'Massagem Relaxante - R$ 120 (60 min)',
     'Massagem Terapêutica - R$ 180 (90 min)',
@@ -131,6 +139,13 @@ const Dashboard = () => {
             </div>
             
             <div className="flex items-center gap-4">
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={generateSimulatedData}
+              >
+                Gerar Dados de Teste
+              </Button>
               <Button 
                 variant="outline" 
                 size="sm"
@@ -510,27 +525,51 @@ const Dashboard = () => {
               </CardHeader>
               <CardContent>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  <Button variant="outline" className="h-20 flex-col">
+                  <Button 
+                    variant="outline" 
+                    className="h-20 flex-col"
+                    onClick={() => handleReportClick('appointments')}
+                  >
                     <Calendar className="w-6 h-6 mb-2" />
                     Agendamentos por Período
                   </Button>
-                  <Button variant="outline" className="h-20 flex-col">
+                  <Button 
+                    variant="outline" 
+                    className="h-20 flex-col"
+                    onClick={() => handleReportClick('revenue')}
+                  >
                     <DollarSign className="w-6 h-6 mb-2" />
                     Faturamento Mensal
                   </Button>
-                  <Button variant="outline" className="h-20 flex-col">
+                  <Button 
+                    variant="outline" 
+                    className="h-20 flex-col"
+                    onClick={() => handleReportClick('clients')}
+                  >
                     <Users className="w-6 h-6 mb-2" />
                     Clientes Mais Frequentes
                   </Button>
-                  <Button variant="outline" className="h-20 flex-col">
+                  <Button 
+                    variant="outline" 
+                    className="h-20 flex-col"
+                    onClick={() => handleReportClick('services')}
+                  >
                     <TrendingUp className="w-6 h-6 mb-2" />
                     Serviços Mais Procurados
                   </Button>
-                  <Button variant="outline" className="h-20 flex-col">
+                  <Button 
+                    variant="outline" 
+                    className="h-20 flex-col"
+                    onClick={() => handleReportClick('schedule')}
+                  >
                     <Clock className="w-6 h-6 mb-2" />
                     Horários de Pico
                   </Button>
-                  <Button variant="outline" className="h-20 flex-col">
+                  <Button 
+                    variant="outline" 
+                    className="h-20 flex-col"
+                    onClick={() => handleReportClick('complete')}
+                  >
                     <BarChart3 className="w-6 h-6 mb-2" />
                     Relatório Completo
                   </Button>
@@ -586,6 +625,13 @@ const Dashboard = () => {
             </div>
           </DialogContent>
         </Dialog>
+
+        {/* Reports Modal */}
+        <ReportsModal 
+          isOpen={showReportsModal}
+          onClose={() => setShowReportsModal(false)}
+          reportType={reportType}
+        />
       </div>
     </div>
   );
