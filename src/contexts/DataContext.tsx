@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
 export interface WhatsAppLead {
@@ -50,7 +49,7 @@ interface DataContextType {
   clients: Client[];
   addWhatsAppLead: (lead: Omit<WhatsAppLead, 'id' | 'createdAt'>) => void;
   addContactForm: (form: Omit<ContactForm, 'id' | 'createdAt'>) => void;
-  addServiceBooking: (booking: Omit<ServiceBooking, 'id' | 'createdAt'>) => void;
+  addServiceBooking: (booking: Omit<ServiceBooking, 'id' | 'createdAt' | 'status'>) => void;
   addClient: (client: Omit<Client, 'id' | 'createdAt'>) => void;
   updateServiceBooking: (id: string, updates: Partial<ServiceBooking>) => void;
 }
@@ -115,7 +114,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setContactForms(prev => [newForm, ...prev]);
   };
 
-  const addServiceBooking = (booking: Omit<ServiceBooking, 'id' | 'createdAt'>) => {
+  const addServiceBooking = (booking: Omit<ServiceBooking, 'id' | 'createdAt' | 'status'>) => {
     const newBooking: ServiceBooking = {
       ...booking,
       id: Date.now().toString(),
