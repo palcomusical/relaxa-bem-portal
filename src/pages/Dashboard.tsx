@@ -24,7 +24,8 @@ import {
   Filter,
   MessageSquare,
   Eye,
-  Edit
+  Edit,
+  RefreshCw
 } from 'lucide-react';
 import { useData } from '@/contexts/DataContext';
 import { useToast } from '@/hooks/use-toast';
@@ -45,10 +46,20 @@ const Dashboard = () => {
   const { serviceBookings, contactForms, whatsappLeads, clients, addClient, addServiceBooking, updateServiceBooking, generateSimulatedData } = useData();
   const { toast } = useToast();
 
+  console.log('🎯 Dashboard renderizando com dados:', {
+    agendamentos: serviceBookings.length,
+    contatos: contactForms.length,
+    leads: whatsappLeads.length,
+    clientes: clients.length,
+    dataFiltro: selectedDate
+  });
+
   // Filter bookings by selected date
   const filteredBookings = serviceBookings.filter(booking => 
     booking.preferredDate === selectedDate
   );
+
+  console.log('📅 Agendamentos filtrados para', selectedDate, ':', filteredBookings.length);
 
   const stats = [
     {
@@ -107,6 +118,11 @@ const Dashboard = () => {
     setShowReportsModal(true);
   };
 
+  const handleRefreshData = () => {
+    generateSimulatedData();
+    toast({ title: "Dados atualizados!", description: "Dados simulados foram recarregados." });
+  };
+
   const services = [
     'Massagem Relaxante - R$ 120 (60 min)',
     'Massagem Terapêutica - R$ 180 (90 min)',
@@ -142,9 +158,11 @@ const Dashboard = () => {
               <Button 
                 variant="outline" 
                 size="sm"
-                onClick={generateSimulatedData}
+                onClick={handleRefreshData}
+                className="flex items-center gap-2"
               >
-                Gerar Dados de Teste
+                <RefreshCw className="w-4 h-4" />
+                Recarregar Dados
               </Button>
               <Button 
                 variant="outline" 
@@ -184,12 +202,31 @@ const Dashboard = () => {
           ))}
         </div>
 
+        {/* Debug Info */}
+        <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+          <h3 className="font-semibold text-blue-800 mb-2">📊 Status dos Dados</h3>
+          <div className="grid grid-cols-4 gap-4 text-sm">
+            <div>
+              <span className="font-medium">Agendamentos:</span> {serviceBookings.length}
+            </div>
+            <div>
+              <span className="font-medium">Contatos:</span> {contactForms.length}
+            </div>
+            <div>
+              <span className="font-medium">Leads WhatsApp:</span> {whatsappLeads.length}
+            </div>
+            <div>
+              <span className="font-medium">Clientes:</span> {clients.length}
+            </div>
+          </div>
+        </div>
+
         {/* Main Content */}
         <Tabs defaultValue="appointments" className="space-y-6">
           <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="appointments">Agendamentos</TabsTrigger>
-            <TabsTrigger value="contacts">Contatos</TabsTrigger>
-            <TabsTrigger value="clients">Clientes</TabsTrigger>
+            <TabsTrigger value="appointments">Agendamentos ({serviceBookings.length})</TabsTrigger>
+            <TabsTrigger value="contacts">Contatos ({contactForms.length + whatsappLeads.length})</TabsTrigger>
+            <TabsTrigger value="clients">Clientes ({clients.length})</TabsTrigger>
             <TabsTrigger value="reports">Relatórios</TabsTrigger>
           </TabsList>
 
@@ -205,7 +242,7 @@ const Dashboard = () => {
                   className="w-auto"
                 />
                 <span className="text-sm text-gray-600">
-                  {filteredBookings.length} agendamentos encontrados
+                  {filteredBookings.length} agendamentos encontrados para {new Date(selectedDate).toLocaleDateString('pt-BR')}
                 </span>
               </div>
               <Dialog open={activeModal === 'new-appointment'} onOpenChange={(open) => setActiveModal(open ? 'new-appointment' : null)}>
@@ -286,7 +323,12 @@ const Dashboard = () => {
               </CardHeader>
               <CardContent>
                 {filteredBookings.length === 0 ? (
-                  <p className="text-center text-gray-500 py-8">Nenhum agendamento encontrado para esta data.</p>
+                  <div className="text-center py-8">
+                    <p className="text-gray-500">Nenhum agendamento encontrado para esta data.</p>
+                    <p className="text-sm text-gray-400 mt-2">
+                      Total de agendamentos no sistema: {serviceBookings.length}
+                    </p>
+                  </div>
                 ) : (
                   <Table>
                     <TableHeader>
@@ -357,18 +399,22 @@ const Dashboard = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4 max-h-96 overflow-y-auto">
-                    {whatsappLeads.map((lead) => (
-                      <div key={lead.id} className="p-4 border rounded-lg">
-                        <div className="flex justify-between items-start mb-2">
-                          <h4 className="font-semibold">{lead.name}</h4>
-                          <span className="text-xs text-gray-500">
-                            {new Date(lead.createdAt).toLocaleDateString('pt-BR')}
-                          </span>
+                    {whatsappLeads.length === 0 ? (
+                      <p className="text-center text-gray-500 py-4">Nenhum lead WhatsApp encontrado.</p>
+                    ) : (
+                      whatsappLeads.map((lead) => (
+                        <div key={lead.id} className="p-4 border rounded-lg">
+                          <div className="flex justify-between items-start mb-2">
+                            <h4 className="font-semibold">{lead.name}</h4>
+                            <span className="text-xs text-gray-500">
+                              {new Date(lead.createdAt).toLocaleDateString('pt-BR')}
+                            </span>
+                          </div>
+                          <p className="text-sm text-gray-600 mb-2">{lead.whatsapp}</p>
+                          <p className="text-sm">{lead.message}</p>
                         </div>
-                        <p className="text-sm text-gray-600 mb-2">{lead.whatsapp}</p>
-                        <p className="text-sm">{lead.message}</p>
-                      </div>
-                    ))}
+                      ))
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -382,19 +428,23 @@ const Dashboard = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4 max-h-96 overflow-y-auto">
-                    {contactForms.map((form) => (
-                      <div key={form.id} className="p-4 border rounded-lg">
-                        <div className="flex justify-between items-start mb-2">
-                          <h4 className="font-semibold">{form.name}</h4>
-                          <span className="text-xs text-gray-500">
-                            {new Date(form.createdAt).toLocaleDateString('pt-BR')}
-                          </span>
+                    {contactForms.length === 0 ? (
+                      <p className="text-center text-gray-500 py-4">Nenhum formulário de contato encontrado.</p>
+                    ) : (
+                      contactForms.map((form) => (
+                        <div key={form.id} className="p-4 border rounded-lg">
+                          <div className="flex justify-between items-start mb-2">
+                            <h4 className="font-semibold">{form.name}</h4>
+                            <span className="text-xs text-gray-500">
+                              {new Date(form.createdAt).toLocaleDateString('pt-BR')}
+                            </span>
+                          </div>
+                          <p className="text-sm text-gray-600 mb-1">{form.email}</p>
+                          <p className="text-sm text-gray-600 mb-2">{form.phone}</p>
+                          <p className="text-sm">{form.message}</p>
                         </div>
-                        <p className="text-sm text-gray-600 mb-1">{form.email}</p>
-                        <p className="text-sm text-gray-600 mb-2">{form.phone}</p>
-                        <p className="text-sm">{form.message}</p>
-                      </div>
-                    ))}
+                      ))
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -404,7 +454,7 @@ const Dashboard = () => {
           {/* Clients Tab */}
           <TabsContent value="clients" className="space-y-6">
             <div className="flex justify-between items-center">
-              <h3 className="text-lg font-semibold">Clientes Cadastrados</h3>
+              <h3 className="text-lg font-semibold">Clientes Cadastrados ({clients.length})</h3>
               <Dialog open={activeModal === 'new-client'} onOpenChange={(open) => setActiveModal(open ? 'new-client' : null)}>
                 <DialogTrigger asChild>
                   <Button className="bg-wellness-500 hover:bg-wellness-600">
@@ -469,47 +519,53 @@ const Dashboard = () => {
 
             <Card>
               <CardContent>
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Nome</TableHead>
-                      <TableHead>Contato</TableHead>
-                      <TableHead>Cadastrado em</TableHead>
-                      <TableHead>Ações</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {clients.map((client) => (
-                      <TableRow key={client.id}>
-                        <TableCell>
-                          <div>
-                            <p className="font-medium">{client.name}</p>
-                            <p className="text-sm text-gray-500">{client.email}</p>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div>
-                            <p className="text-sm">{client.phone}</p>
-                            {client.whatsapp && <p className="text-sm text-gray-500">WhatsApp: {client.whatsapp}</p>}
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          {new Date(client.createdAt).toLocaleDateString('pt-BR')}
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex gap-2">
-                            <Button size="sm" variant="outline">
-                              <Eye className="w-4 h-4" />
-                            </Button>
-                            <Button size="sm" variant="outline">
-                              <Edit className="w-4 h-4" />
-                            </Button>
-                          </div>
-                        </TableCell>
+                {clients.length === 0 ? (
+                  <div className="text-center py-8">
+                    <p className="text-gray-500">Nenhum cliente cadastrado.</p>
+                  </div>
+                ) : (
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Nome</TableHead>
+                        <TableHead>Contato</TableHead>
+                        <TableHead>Cadastrado em</TableHead>
+                        <TableHead>Ações</TableHead>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                    </TableHeader>
+                    <TableBody>
+                      {clients.map((client) => (
+                        <TableRow key={client.id}>
+                          <TableCell>
+                            <div>
+                              <p className="font-medium">{client.name}</p>
+                              <p className="text-sm text-gray-500">{client.email}</p>
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <div>
+                              <p className="text-sm">{client.phone}</p>
+                              {client.whatsapp && <p className="text-sm text-gray-500">WhatsApp: {client.whatsapp}</p>}
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            {new Date(client.createdAt).toLocaleDateString('pt-BR')}
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex gap-2">
+                              <Button size="sm" variant="outline">
+                                <Eye className="w-4 h-4" />
+                              </Button>
+                              <Button size="sm" variant="outline">
+                                <Edit className="w-4 h-4" />
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                )}
               </CardContent>
             </Card>
           </TabsContent>
