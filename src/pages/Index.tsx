@@ -5,7 +5,7 @@ import About from '@/components/About';
 import Services from '@/components/Services';
 import Contact from '@/components/Contact';
 import Footer from '@/components/Footer';
-import WhatsAppButton from '@/components/WhatsAppButton';
+import WhatsAppModal from '@/components/WhatsAppModal';
 import ChatWidget from '@/components/ChatWidget';
 import LGPDModal from '@/components/LGPDModal';
 
@@ -18,7 +18,7 @@ const Index = () => {
       <Services />
       <Contact />
       <Footer />
-      <WhatsAppButton />
+      <WhatsAppModal />
       <ChatWidget />
       <LGPDModal />
     </div>

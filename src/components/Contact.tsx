@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
+import { useData } from '@/contexts/DataContext';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -15,10 +16,14 @@ const Contact = () => {
     message: ''
   });
   const { toast } = useToast();
+  const { addContactForm } = useData();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
+    console.log('Contact form submitted:', formData);
+    
+    addContactForm(formData);
+    
     toast({
       title: "Mensagem enviada!",
       description: "Entraremos em contato em breve. Obrigado!",

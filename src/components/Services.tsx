@@ -2,6 +2,7 @@
 import { Clock, Users, Sparkles, Zap, Heart, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import ServiceBookingModal from '@/components/ServiceBookingModal';
 
 const Services = () => {
   const services = [
@@ -107,12 +108,11 @@ const Services = () => {
                   </ul>
                 </div>
                 
-                <Button 
-                  className="w-full bg-gradient-to-r from-wellness-500 to-calm-500 hover:from-wellness-600 hover:to-calm-600"
-                  onClick={() => window.open('https://wa.me/5511999999999', '_blank')}
-                >
-                  Agendar Agora
-                </Button>
+                <ServiceBookingModal>
+                  <Button className="w-full bg-gradient-to-r from-wellness-500 to-calm-500 hover:from-wellness-600 hover:to-calm-600">
+                    Agendar Agora
+                  </Button>
+                </ServiceBookingModal>
               </CardContent>
             </Card>
           ))}
@@ -126,13 +126,14 @@ const Services = () => {
             <p className="text-gray-600 mb-6">
               Entre em contato conosco para consultas personalizadas e outros tratamentos específicos.
             </p>
-            <Button 
-              size="lg"
-              className="bg-gradient-to-r from-wellness-500 to-calm-500 hover:from-wellness-600 hover:to-calm-600"
-              onClick={() => window.open('https://wa.me/5511999999999', '_blank')}
-            >
-              Falar com Especialista
-            </Button>
+            <ServiceBookingModal>
+              <Button 
+                size="lg"
+                className="bg-gradient-to-r from-wellness-500 to-calm-500 hover:from-wellness-600 hover:to-calm-600"
+              >
+                Falar com Especialista
+              </Button>
+            </ServiceBookingModal>
           </div>
         </div>
       </div>

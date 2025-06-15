@@ -1,6 +1,7 @@
 
 import { ArrowRight, Sparkles, Heart, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import ServiceBookingModal from '@/components/ServiceBookingModal';
 
 const Hero = () => {
   const scrollToSection = (sectionId: string) => {
@@ -55,14 +56,15 @@ const Hero = () => {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button 
-                size="lg" 
-                className="bg-gradient-to-r from-wellness-500 to-calm-500 hover:from-wellness-600 hover:to-calm-600 text-white px-8 py-6 text-lg"
-                onClick={() => window.open('https://wa.me/5511999999999', '_blank')}
-              >
-                Agendar Consulta
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </Button>
+              <ServiceBookingModal>
+                <Button 
+                  size="lg" 
+                  className="bg-gradient-to-r from-wellness-500 to-calm-500 hover:from-wellness-600 hover:to-calm-600 text-white px-8 py-6 text-lg"
+                >
+                  Agendar Consulta
+                  <ArrowRight className="ml-2 w-5 h-5" />
+                </Button>
+              </ServiceBookingModal>
               
               <Button 
                 size="lg" 
