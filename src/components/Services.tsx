@@ -108,7 +108,7 @@ const Services = () => {
                   </ul>
                 </div>
                 
-                <ServiceBookingModal>
+                <ServiceBookingModal preSelectedService={`${service.title} - ${service.price} (${service.duration})`}>
                   <Button className="w-full bg-gradient-to-r from-wellness-500 to-calm-500 hover:from-wellness-600 hover:to-calm-600">
                     Agendar Agora
                   </Button>

@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Calendar, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,9 +11,10 @@ import { useData } from '@/contexts/DataContext';
 
 interface ServiceBookingModalProps {
   children: React.ReactNode;
+  preSelectedService?: string;
 }
 
-const ServiceBookingModal = ({ children }: ServiceBookingModalProps) => {
+const ServiceBookingModal = ({ children, preSelectedService }: ServiceBookingModalProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -41,6 +42,16 @@ const ServiceBookingModal = ({ children }: ServiceBookingModalProps) => {
     '11:00', '11:30', '14:00', '14:30', '15:00', '15:30',
     '16:00', '16:30', '17:00', '17:30'
   ];
+
+  // Pré-seleciona o serviço quando o modal é aberto
+  useEffect(() => {
+    if (isOpen && preSelectedService) {
+      setFormData(prev => ({
+        ...prev,
+        service: preSelectedService
+      }));
+    }
+  }, [isOpen, preSelectedService]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
