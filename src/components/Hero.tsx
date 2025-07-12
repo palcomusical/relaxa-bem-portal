@@ -77,13 +77,13 @@ const Hero = () => {
             </div>
           </div>
 
-          {/* Right side - Professional Image */}
+          {/* Right side - Massage Therapy Image */}
           <div className="relative">
             <div className="relative z-10 bg-white rounded-3xl p-2 shadow-2xl">
               <div className="aspect-[4/5] rounded-2xl overflow-hidden">
                 <img 
-                  src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
-                  alt="Profissional de massoterapia em ambiente tranquilo"
+                  src="https://images.unsplash.com/photo-1544161515-4ab6ce6db874?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+                  alt="Sessão de massoterapia relaxante em ambiente tranquilo"
                   className="w-full h-full object-cover"
                 />
               </div>

@@ -73,8 +73,8 @@ const Services = () => {
         <div className="mb-16">
           <div className="relative rounded-3xl overflow-hidden shadow-2xl max-w-4xl mx-auto">
             <img 
-              src="https://images.unsplash.com/photo-1649972904349-6e44c42644a7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80"
-              alt="Sala de massagem relaxante com ambiente tranquilo"
+              src="https://images.unsplash.com/photo-1600334129128-685c5582fd35?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80"
+              alt="Sala de massoterapia profissional com ambiente relaxante e acolhedor"
               className="w-full h-64 lg:h-80 object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-r from-wellness-900/70 to-calm-900/70 flex items-center justify-center">
@@ -88,7 +88,7 @@ const Services = () => {
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {services.map((service, index) => (
-            <Card key={index} className="group hover:shadow-xl transition-all duration-300 border-0 shadow-lg">
+            <Card key={index} className="group hover:shadow-xl transition-all duration-300 border-0 shadow-lg bg-white/80 backdrop-blur-sm">
               <CardHeader className="text-center pb-4">
                 <div className="w-16 h-16 mx-auto bg-gradient-to-r from-wellness-500 to-calm-500 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
                   <service.icon className="w-8 h-8 text-white" />
@@ -126,7 +126,7 @@ const Services = () => {
                 </div>
                 
                 <ServiceBookingModal preSelectedService={`${service.title} - ${service.price} (${service.duration})`}>
-                  <Button className="w-full bg-gradient-to-r from-wellness-500 to-calm-500 hover:from-wellness-600 hover:to-calm-600">
+                  <Button className="w-full bg-gradient-to-r from-wellness-500 to-calm-500 hover:from-wellness-600 hover:to-calm-600 transform hover:scale-105 transition-all duration-200">
                     Agendar Agora
                   </Button>
                 </ServiceBookingModal>
@@ -136,7 +136,7 @@ const Services = () => {
         </div>
 
         <div className="mt-16 text-center">
-          <div className="bg-white rounded-2xl p-8 shadow-lg max-w-2xl mx-auto relative overflow-hidden">
+          <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-xl max-w-2xl mx-auto relative overflow-hidden border border-wellness-200/20">
             <div className="absolute inset-0 bg-gradient-to-r from-wellness-50 to-calm-50 opacity-50"></div>
             <div className="relative z-10">
               <h3 className="text-2xl font-bold text-gray-900 mb-4">
@@ -148,7 +148,7 @@ const Services = () => {
               <ServiceBookingModal>
                 <Button 
                   size="lg"
-                  className="bg-gradient-to-r from-wellness-500 to-calm-500 hover:from-wellness-600 hover:to-calm-600"
+                  className="bg-gradient-to-r from-wellness-500 to-calm-500 hover:from-wellness-600 hover:to-calm-600 transform hover:scale-105 transition-all duration-200"
                 >
                   Falar com Especialista
                 </Button>
