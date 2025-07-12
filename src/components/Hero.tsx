@@ -77,17 +77,15 @@ const Hero = () => {
             </div>
           </div>
 
-          {/* Right side - Image/Visual */}
+          {/* Right side - Professional Image */}
           <div className="relative">
-            <div className="relative z-10 bg-white rounded-3xl p-8 shadow-2xl">
-              <div className="aspect-[4/5] bg-gradient-to-br from-wellness-100 to-calm-100 rounded-2xl flex items-center justify-center">
-                <div className="text-center space-y-4">
-                  <div className="w-24 h-24 bg-gradient-to-r from-wellness-500 to-calm-500 rounded-full mx-auto flex items-center justify-center">
-                    <Heart className="w-12 h-12 text-white" />
-                  </div>
-                  <h3 className="text-2xl font-bold text-gray-900">15+ Anos</h3>
-                  <p className="text-gray-600">de experiência em massoterapia</p>
-                </div>
+            <div className="relative z-10 bg-white rounded-3xl p-2 shadow-2xl">
+              <div className="aspect-[4/5] rounded-2xl overflow-hidden">
+                <img 
+                  src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+                  alt="Profissional de massoterapia em ambiente tranquilo"
+                  className="w-full h-full object-cover"
+                />
               </div>
             </div>
             

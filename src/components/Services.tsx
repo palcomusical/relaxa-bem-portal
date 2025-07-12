@@ -69,6 +69,23 @@ const Services = () => {
           </p>
         </div>
 
+        {/* Hero image section */}
+        <div className="mb-16">
+          <div className="relative rounded-3xl overflow-hidden shadow-2xl max-w-4xl mx-auto">
+            <img 
+              src="https://images.unsplash.com/photo-1649972904349-6e44c42644a7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80"
+              alt="Sala de massagem relaxante com ambiente tranquilo"
+              className="w-full h-64 lg:h-80 object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-wellness-900/70 to-calm-900/70 flex items-center justify-center">
+              <div className="text-center text-white space-y-4">
+                <h3 className="text-2xl lg:text-3xl font-bold">Ambiente Relaxante e Profissional</h3>
+                <p className="text-lg opacity-90">Cada detalhe pensado para o seu conforto</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {services.map((service, index) => (
             <Card key={index} className="group hover:shadow-xl transition-all duration-300 border-0 shadow-lg">
@@ -119,21 +136,24 @@ const Services = () => {
         </div>
 
         <div className="mt-16 text-center">
-          <div className="bg-white rounded-2xl p-8 shadow-lg max-w-2xl mx-auto">
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">
-              Não encontrou o que procura?
-            </h3>
-            <p className="text-gray-600 mb-6">
-              Entre em contato conosco para consultas personalizadas e outros tratamentos específicos.
-            </p>
-            <ServiceBookingModal>
-              <Button 
-                size="lg"
-                className="bg-gradient-to-r from-wellness-500 to-calm-500 hover:from-wellness-600 hover:to-calm-600"
-              >
-                Falar com Especialista
-              </Button>
-            </ServiceBookingModal>
+          <div className="bg-white rounded-2xl p-8 shadow-lg max-w-2xl mx-auto relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-r from-wellness-50 to-calm-50 opacity-50"></div>
+            <div className="relative z-10">
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                Não encontrou o que procura?
+              </h3>
+              <p className="text-gray-600 mb-6">
+                Entre em contato conosco para consultas personalizadas e outros tratamentos específicos.
+              </p>
+              <ServiceBookingModal>
+                <Button 
+                  size="lg"
+                  className="bg-gradient-to-r from-wellness-500 to-calm-500 hover:from-wellness-600 hover:to-calm-600"
+                >
+                  Falar com Especialista
+                </Button>
+              </ServiceBookingModal>
+            </div>
           </div>
         </div>
       </div>

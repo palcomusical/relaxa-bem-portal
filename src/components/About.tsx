@@ -82,16 +82,28 @@ const About = () => {
           </div>
 
           <div className="relative">
-            <div className="bg-gradient-to-br from-wellness-100 to-calm-100 rounded-3xl p-8 h-96 flex items-center justify-center">
-              <div className="text-center space-y-4">
-                <div className="w-20 h-20 bg-gradient-to-r from-wellness-500 to-calm-500 rounded-full mx-auto flex items-center justify-center">
-                  <Heart className="w-10 h-10 text-white" />
+            <div className="rounded-3xl overflow-hidden shadow-2xl">
+              <img 
+                src="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+                alt="Ambiente relaxante de massoterapia"
+                className="w-full h-96 object-cover"
+              />
+            </div>
+            
+            {/* Floating testimonial card */}
+            <div className="absolute -bottom-6 -left-6 bg-white rounded-2xl p-6 shadow-xl max-w-sm animate-float" style={{animationDelay: '1s'}}>
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-12 h-12 bg-gradient-to-r from-wellness-500 to-calm-500 rounded-full flex items-center justify-center">
+                  <Heart className="w-6 h-6 text-white" />
                 </div>
-                <h4 className="text-xl font-bold text-gray-900">Cuidado Personalizado</h4>
-                <p className="text-gray-600">
-                  Cada tratamento é adaptado às suas necessidades específicas
-                </p>
+                <div>
+                  <h4 className="font-semibold text-gray-900">Maria Silva</h4>
+                  <p className="text-sm text-gray-600">Cliente há 3 anos</p>
+                </div>
               </div>
+              <p className="text-sm text-gray-600 italic">
+                "Excelente atendimento! Saio renovada a cada sessão."
+              </p>
             </div>
           </div>
         </div>
