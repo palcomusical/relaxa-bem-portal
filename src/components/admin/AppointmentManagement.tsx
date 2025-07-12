@@ -38,11 +38,15 @@ const AppointmentManagement = () => {
   });
 
   const handleStatusChange = (bookingId: string, newStatus: string) => {
-    updateServiceBooking(bookingId, { status: newStatus });
-    toast({
-      title: "Status atualizado",
-      description: `Agendamento marcado como ${newStatus}`
-    });
+    // Type guard to ensure the status is valid
+    const validStatuses = ['Agendado', 'Confirmado', 'Em andamento', 'Concluído', 'Cancelado'] as const;
+    if (validStatuses.includes(newStatus as any)) {
+      updateServiceBooking(bookingId, { status: newStatus as 'Agendado' | 'Confirmado' | 'Em andamento' | 'Concluído' | 'Cancelado' });
+      toast({
+        title: "Status atualizado",
+        description: `Agendamento marcado como ${newStatus}`
+      });
+    }
   };
 
   const handleViewDetails = (booking: any) => {
