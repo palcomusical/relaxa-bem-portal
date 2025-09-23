@@ -3,13 +3,14 @@ import { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Settings, Palette, Users, Calendar, BarChart3, Bell, Shield, Database } from 'lucide-react';
+import { Settings, Palette, Users, Calendar, BarChart3, Bell, Shield, Database, MessageSquare } from 'lucide-react';
 import SiteCustomization from '@/components/admin/SiteCustomization';
 import AppointmentManagement from '@/components/admin/AppointmentManagement';
 import UserManagement from '@/components/admin/UserManagement';
 import SystemSettings from '@/components/admin/SystemSettings';
 import Analytics from '@/components/admin/Analytics';
 import NotificationCenter from '@/components/admin/NotificationCenter';
+import LeadsManagement from '@/components/admin/LeadsManagement';
 
 const AdminPanel = () => {
   const [activeTab, setActiveTab] = useState('overview');
@@ -42,8 +43,9 @@ const AdminPanel = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-6">
+          <TabsList className="grid w-full grid-cols-7">
             <TabsTrigger value="overview">Visão Geral</TabsTrigger>
+            <TabsTrigger value="leads">Leads</TabsTrigger>
             <TabsTrigger value="site">Site</TabsTrigger>
             <TabsTrigger value="appointments">Consultas</TabsTrigger>
             <TabsTrigger value="users">Usuários</TabsTrigger>
@@ -144,6 +146,10 @@ const AdminPanel = () => {
                 </CardContent>
               </Card>
             </div>
+          </TabsContent>
+
+          <TabsContent value="leads">
+            <LeadsManagement />
           </TabsContent>
 
           <TabsContent value="site">
