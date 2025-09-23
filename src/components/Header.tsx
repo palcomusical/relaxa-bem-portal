@@ -1,10 +1,12 @@
 
 import { useState } from 'react';
-import { Menu, X, Phone, MapPin, Clock } from 'lucide-react';
+import { Menu, X, Phone, MapPin, Clock, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -50,6 +52,17 @@ const Header = () => {
               <p className="text-sm text-gray-600">Clínica de Bem-Estar</p>
             </div>
           </div>
+
+          {/* Admin button */}
+          <Button
+            onClick={() => navigate('/admin-panel')}
+            variant="ghost"
+            size="sm"
+            className="hidden lg:flex items-center gap-2 text-gray-600 hover:text-wellness-600"
+          >
+            <Settings className="w-4 h-4" />
+            Admin
+          </Button>
 
           {/* Desktop menu */}
           <nav className="hidden lg:flex items-center gap-8">
@@ -98,6 +111,15 @@ const Header = () => {
         {isMenuOpen && (
           <nav className="lg:hidden mt-4 py-4 border-t border-gray-200">
             <div className="flex flex-col gap-4">
+              <Button
+                onClick={() => navigate('/admin-panel')}
+                variant="ghost"
+                size="sm"
+                className="flex items-center gap-2 text-gray-600 hover:text-wellness-600 justify-start"
+              >
+                <Settings className="w-4 h-4" />
+                Painel Administrativo
+              </Button>
               <button
                 onClick={() => scrollToSection('inicio')}
                 className="text-gray-700 hover:text-wellness-600 transition-colors text-left"
