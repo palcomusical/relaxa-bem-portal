@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { Menu, X, Phone, MapPin, Clock, Settings } from 'lucide-react';
+import { Menu, X, Phone, MapPin, Clock, Settings, LogIn } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 
@@ -53,16 +53,27 @@ const Header = () => {
             </div>
           </div>
 
-          {/* Admin button */}
-          <Button
-            onClick={() => navigate('/admin-panel')}
-            variant="ghost"
-            size="sm"
-            className="hidden lg:flex items-center gap-2 text-gray-600 hover:text-wellness-600"
-          >
-            <Settings className="w-4 h-4" />
-            Admin
-          </Button>
+          {/* Admin and Login buttons */}
+          <div className="hidden lg:flex items-center gap-2">
+            <Button
+              onClick={() => navigate('/auth')}
+              variant="ghost"
+              size="sm"
+              className="flex items-center gap-2 text-gray-600 hover:text-wellness-600"
+            >
+              <LogIn className="w-4 h-4" />
+              Login
+            </Button>
+            <Button
+              onClick={() => navigate('/admin-panel')}
+              variant="ghost"
+              size="sm"
+              className="flex items-center gap-2 text-gray-600 hover:text-wellness-600"
+            >
+              <Settings className="w-4 h-4" />
+              Admin
+            </Button>
+          </div>
 
           {/* Desktop menu */}
           <nav className="hidden lg:flex items-center gap-8">
@@ -111,6 +122,15 @@ const Header = () => {
         {isMenuOpen && (
           <nav className="lg:hidden mt-4 py-4 border-t border-gray-200">
             <div className="flex flex-col gap-4">
+              <Button
+                onClick={() => navigate('/auth')}
+                variant="ghost"
+                size="sm"
+                className="flex items-center gap-2 text-gray-600 hover:text-wellness-600 justify-start"
+              >
+                <LogIn className="w-4 h-4" />
+                Login
+              </Button>
               <Button
                 onClick={() => navigate('/admin-panel')}
                 variant="ghost"
